@@ -32,10 +32,21 @@ class PointsController {
     } = request.body;
 
     const trx = await knex.transaction();
+    let itemVerify;
+
+    items.map(async (item: number) => {
+      itemVerify = await knex("items").select("*").where("id", item);
+      if (itemVerify.length === 0 || itemVerify.length < 0) {
+        return response.json({
+          message: `O item de número ${item} não foi encontrado`,
+        });
+      }
+    });
 
     try {
       const point = {
-        image: "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
+        image:
+          "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
         name,
         email,
         whatsapp,
