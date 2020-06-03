@@ -1,19 +1,13 @@
 import express from "express";
+import routes from "./routes";
+import path from "path";
 
 const app = express();
 
 app.use(express.json());
 
-// ROTA: Endereço completo da requisição
-// RECURSO: Qual entidade estamos acessando do sistema
+app.use(routes);
 
-//GET: Buscar uma ou mais informações do Back-end
-//POST: Criar uma nova informação no Back-end
-//PUT: Atualizar uma informação no Back-end
-//DELETE: Deletar uma informação no Back-end
-
-app.get("/", (request, response) => {
-  console.log("working");
-});
+app.use("/uploads", express.static(path.resolve(__dirname, "..", "uploads")));
 
 app.listen(3333);
