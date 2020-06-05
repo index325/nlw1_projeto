@@ -55,6 +55,7 @@ class PointsController {
         city,
         uf,
       };
+
       const pointInserted = await trx("points").insert(point).returning(["id"]);
 
       const point_id = pointInserted[0].id;
@@ -92,7 +93,7 @@ class PointsController {
     const items = await knex("items")
       .join("point_items", "items.id", "=", "point_items.item_id")
       .where("point_items.point_id", id)
-      .select("items.title");
+      .select("*");
 
     return response.json({ point, items });
   }
