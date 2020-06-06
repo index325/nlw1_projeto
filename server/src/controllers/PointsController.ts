@@ -17,7 +17,14 @@ class PointsController {
       .distinct()
       .select("points.*");
 
-    return response.json(points);
+    const serializedPoints = points.map((point) => {
+      return {
+        ...point,
+        image_url: `http://192.168.15.10:3333/uploads/${point.image}`,
+      };
+    });
+
+    return response.json(serializedPoints);
   }
   async create(request: Request, response: Response) {
     const {
@@ -32,21 +39,20 @@ class PointsController {
     } = request.body;
 
     const trx = await knex.transaction();
-    let itemVerify;
+    // let itemVerify;
 
-    items.map(async (item: number) => {
-      itemVerify = await knex("items").select("*").where("id", item);
-      if (itemVerify.length === 0 || itemVerify.length < 0) {
-        return response.json({
-          message: `O item de número ${item} não foi encontrado`,
-        });
-      }
-    });
+    // items.split(",").map(async (item: number) => {
+    //   itemVerify = await knex("items").select("*").where("id", item);
+    //   if (itemVerify.length === 0 || itemVerify.length < 0) {
+    //     return response.json({
+    //       message: `O item de número ${item} não foi encontrado`,
+    //     });
+    //   }
+    // });
 
     try {
       const point = {
-        image:
-          "https://images.unsplash.com/photo-1550989460-0adf9ea622e2?ixlib=rb-1.2.1&ixid=eyJhcHBfaWQiOjEyMDd9&auto=format&fit=crop&w=400&q=60",
+        image: request.file.filename,
         name,
         email,
         whatsapp,
@@ -60,12 +66,15 @@ class PointsController {
 
       const point_id = pointInserted[0].id;
 
-      const pointItems = items.map((item_id: number) => {
-        return {
-          item_id,
-          point_id,
-        };
-      });
+      const pointItems = items
+        .split(",")
+        .map((item: string) => Number(item.trim()))
+        .map((item_id: number) => {
+          return {
+            item_id,
+            point_id,
+          };
+        });
 
       await trx("point_items").insert(pointItems);
 
@@ -90,12 +99,17 @@ class PointsController {
         .json({ message: "Ponto de coleta não encontrado" });
     }
 
+    const serializedPoint = {
+      ...point,
+      image_url: `http://192.168.15.10:3333/uploads/${point.image}`,
+    };
+
     const items = await knex("items")
       .join("point_items", "items.id", "=", "point_items.item_id")
       .where("point_items.point_id", id)
       .select("*");
 
-    return response.json({ point, items });
+    return response.json({ point: serializedPoint, items });
   }
 }
 
