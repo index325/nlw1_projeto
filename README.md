@@ -60,7 +60,7 @@ From your command line:
 
 ```bash
 # Clone this repository
-$ git clone https://github.com/nymalone/next-level-week-1.0
+$ git clone https://github.com/index325/next-level-week-1.0
 
 # Go into the repository
 $ cd next-level-week-1.0/server
