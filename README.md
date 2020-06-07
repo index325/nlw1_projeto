@@ -19,9 +19,6 @@
   </a>
 </p>
 
-#### If you need support with the content, go to my [Notion notes](https://www.notion.so/NLW-6fe8f579d7ec49018926d0c81d546325)
-
-
 ## :information_source: What's Next Level Week?
 
 NLW is a practical week with lots of code, challenges, networking and a single objective: to take you to the next level.
