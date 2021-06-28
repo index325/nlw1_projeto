@@ -32,17 +32,16 @@ const CreatePoint = () => {
     name: "",
     email: "",
     whatsapp: "",
+    address: "",
   });
 
   const [selectedUf, setSelectedUf] = useState("0");
   const [selectedCity, setSelectedCity] = useState("0");
   const [selectedPosition, setSelectedPosition] = useState<[number, number]>([
-    0,
-    0,
+    0, 0,
   ]);
   const [initialPosition, setInitialPosition] = useState<[number, number]>([
-    0,
-    0,
+    0, 0,
   ]);
   const [selectedItems, setSelectedItems] = useState<number[]>([]);
   const [selectedFile, setSelectedFile] = useState<File>();
@@ -125,7 +124,7 @@ const CreatePoint = () => {
   async function handleSubmit(event: FormEvent) {
     event.preventDefault();
 
-    const { name, email, whatsapp } = formData;
+    const { name, email, whatsapp, address } = formData;
     const uf = selectedUf;
     const city = selectedCity;
     const [latitude, longitude] = selectedPosition;
@@ -138,6 +137,7 @@ const CreatePoint = () => {
     data.append("whatsapp", whatsapp);
     data.append("uf", uf);
     data.append("city", city);
+    data.append("address", address);
     data.append("latitude", String(latitude));
     data.append("longitude", String(longitude));
     data.append("items", items.join(","));
@@ -253,6 +253,17 @@ const CreatePoint = () => {
                   </option>
                 ))}
               </select>
+            </div>
+          </div>
+          <div className="field-group">
+            <div className="field">
+              <label htmlFor="uf">Endereço</label>
+              <input
+                type="text"
+                onChange={handleInputChange}
+                name="address"
+                id="address"
+              />
             </div>
           </div>
         </fieldset>

@@ -23,6 +23,7 @@ routes.post(
     {
       body: Joi.object().keys({
         name: Joi.string().required(),
+        address: Joi.string().required(),
         email: Joi.string().required().email(),
         whatsapp: Joi.string().required(),
         latitude: Joi.number().required(),

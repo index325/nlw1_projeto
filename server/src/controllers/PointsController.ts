@@ -9,9 +9,20 @@ class PointsController {
       .split(",")
       .map((item) => Number(item.trim()));
 
-    const points = await knex("points")
-      .join("point_items", "points.id", "=", "point_items.point_id")
-      .whereIn("point_items.item_id", parsedItems)
+    console.log(parsedItems);
+
+    let qb = knex("points").join(
+      "point_items",
+      "points.id",
+      "=",
+      "point_items.point_id"
+    );
+
+    if (items) {
+      qb.whereIn("point_items.item_id", parsedItems);
+    }
+
+    const points = await qb
       .where("city", String(city))
       .where("uf", String(uf))
       .distinct()
@@ -36,6 +47,7 @@ class PointsController {
       city,
       uf,
       items,
+      address,
     } = request.body;
 
     const trx = await knex.transaction();
@@ -60,6 +72,7 @@ class PointsController {
         longitude,
         city,
         uf,
+        address,
       };
 
       const pointInserted = await trx("points").insert(point).returning(["id"]);
@@ -101,7 +114,7 @@ class PointsController {
 
     const serializedPoint = {
       ...point,
-      image_url: `http://192.168.15.10:3333/uploads/${point.image}`,
+      image_url: `https://raw.githubusercontent.com/index325/nlw1_projeto/774c6d22cd8b51c9b6fa4cd3288b89df06409d37/server/uploads/${point.image}`,
     };
 
     const items = await knex("items")
